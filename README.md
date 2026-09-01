@@ -1,11 +1,8 @@
 # 🔐 SSH Key & Security Installer
 
-一键搞定 Linux 服务器的 SSH 密钥配置、端口修改和密码登录禁用。  
-专为云服务器初始化、VPS 安全加固和自动化运维设计，兼容主流 Linux 发行版。
+一键搞定 Linux 服务器的 SSH 密钥配置、端口修改和密码登录禁用，兼容主流 Linux 发行版。
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Bash](https://img.shields.io/badge/Bash-4.0+-green.svg)](https://www.gnu.org/software/bash/)
-[![Platform](https://img.shields.io/badge/platform-Linux-blue.svg)](https://www.linux.org)
+
 
 ---
 
@@ -20,7 +17,7 @@
 - **在服务器上安全生成 ED25519 密钥对**
   - 无痕生成（`-C ""` 清除后缀标识）
   - 自动将公钥写入 `authorized_keys`
-  - 生成后私钥直接显示在终端，供本地保存（或通过 SFTP 下载）
+  - 生成的密钥对直接显示在终端，供本地保存（或通过 SFTP 下载）
 
 - **交互式公钥可视化管理**
   - 列表展示所有已存公钥（含添加时间、密钥类型、来源备注）
