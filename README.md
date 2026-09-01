@@ -100,5 +100,5 @@ bash <(curl -fsSL https://raw.githubusercontent.com/BeacherZ/key.sh/main/key.sh)
 
 本项目采用 [MIT License](https://www.google.com/search?q=LICENSE) 协议开源。
 
-```
+
 
