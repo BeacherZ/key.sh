@@ -1,4 +1,4 @@
-# Linux SSH 密钥与安全一键配置工具 (`key.sh`)
+# Linux SSH 密钥与安全一键配置工具
 
 一个轻量、高效且安全的 Linux SSH 运维脚本。支持一键导入/生成 SSH 密钥、更改服务端口、禁用密码登录以及公钥精准可视化管理。
 
@@ -94,11 +94,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/BeacherZ/key.sh/main/key.sh)
 1. **测试连接再关闭窗口**：修改 SSH 端口或禁用密码登录后，**请勿立即关闭当前 SSH 终端**。请新建一个终端窗口测试能否顺利连接新端口/密钥登录。
 2. **云服务器安全组/防火墙**：脚本会自动放行本机防火墙（UFW/Firewalld），但如果使用的是阿里云、腾讯云、AWS 等云厂商 VPS，请务必前往**厂商后台的安全组/防火墙**中放行相应的新端口。
 
----
 
-## 📄 开源协议
-
-本项目采用 [MIT License](https://www.google.com/search?q=LICENSE) 协议开源。
 
 
 
