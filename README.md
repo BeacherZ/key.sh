@@ -60,17 +60,46 @@ bash <(curl -fsSL https://raw.githubusercontent.com/BeacherZ/key.sh/main/key.sh)
 
 ---
 
+
 ## ⌨️ 命令行模式
 
+无需进入交互菜单，可直接执行单次操作；多个参数可以组合，脚本会按固定顺序执行。
+
+### 常用命令
+
 ```bash
-./key.sh -g <GitHub用户名>   # 从 GitHub 拉取公钥
-./key.sh -u <URL>            # 从自定义 URL 拉取公钥
-./key.sh -f <文件>           # 从本地文件导入公钥
-./key.sh -p <端口>           # 修改 SSH 端口
-./key.sh -d                  # 禁用密码登录
-./key.sh -o                  # 覆盖模式（清空已存公钥）
-./key.sh -h                  # 显示帮助
+./key.sh -g <GitHub用户名>    # 从 GitHub 拉取公钥
+./key.sh -u <URL>             # 从自定义 URL 拉取公钥
+./key.sh -f <文件>            # 从本地文件导入公钥
+./key.sh -p <端口>            # 修改 SSH 端口（自动同步防火墙与 Fail2Ban）
+./key.sh -d                   # 禁用密码登录
+./key.sh -h                   # 显示帮助
 ```
+
+### 组合用法
+
+```bash
+# 一次性完成：拉取公钥 → 改端口 → 禁用密码登录
+./key.sh -g <GitHub用户名> -p 2222 -d
+
+# 覆盖模式：先清空已存公钥，再追加（-o 必须与 -g/-u/-f 配合）
+./key.sh -o -g <GitHub用户名>
+./key.sh -o -f /path/to/PublicKey.pub
+```
+
+### 参数说明
+
+| 参数 | 说明 | 可单独使用 |
+|---|---|:---:|
+| `-g <用户名>` | 从 GitHub 拉取公钥 | ✅ |
+| `-u <URL>` | 从自定义 URL 拉取公钥 | ✅ |
+| `-f <文件>` | 从本地文件导入公钥 | ✅ |
+| `-p <端口>` | 修改 SSH 端口 | ✅ |
+| `-d` | 禁用密码登录 | ✅ |
+| `-o` | 覆盖模式，清空已存公钥 | ❌ 需配合 `-g`/`-u`/`-f` |
+| `-h` | 显示帮助 | ✅ |
+
+
 
 ---
 
