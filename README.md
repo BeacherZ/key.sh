@@ -1,6 +1,6 @@
 ## 交互式 SSH 安全配置脚本 · 一键加固你的 VPS
 
-密钥登录管理 · 密码登录开关 · Fail2Ban 防护 · 端口修改
+密钥登录管理 · 密码登录开关 · Fail2Ban 防护 · SSH 端口修改
 
 [![Shell](https://img.shields.io/badge/Shell-Bash-4EAA25?logo=gnu-bash&logoColor=white)](#)
 [![Platform](https://img.shields.io/badge/Platform-Linux-FCC624?logo=linux&logoColor=black)](#)
