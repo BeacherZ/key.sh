@@ -30,7 +30,7 @@ SSHD_LEGACY="${SSHD_CONF_DIR}/99-key.sh.conf"
 if [ "$EUID" -eq 0 ]; then SUDO=""; else SUDO="sudo"; fi
 
 PKG_MGR=""; INIT_SYS=""; SSH_LOG=""; OS_NAME=""; OS_ID=""; OS_VER=""; OS_SHORT=""
-_DONE_BACKUP=""; _INCLUDE_WARNED=0; MASK_SSH_SOCKET=0
+_INCLUDE_WARNED=0; MASK_SSH_SOCKET=0
 
 # 提权前置检查：非 root 且无 sudo 时直接退出，避免所有系统命令静默失败
 require_privilege() {
@@ -241,18 +241,6 @@ get_sshd_config_val() {
     echo "$default_val"
 }
 
-# 修改前备份（同一次运行内每个文件只备份一次）
-backup_once() {
-    local f="$1"
-    [ -f "$f" ] || return 0
-    case " ${_DONE_BACKUP} " in *" ${f} "*) return 0 ;; esac
-    local stamp; stamp=$(date "+%Y%m%d-%H%M%S")
-    if $SUDO cp -a "$f" "${f}.key.sh.bak.${stamp}" 2>/dev/null; then
-        _DONE_BACKUP="${_DONE_BACKUP} ${f}"
-        echo -e "${INFO} 已备份原配置: ${GRAY}${f}.key.sh.bak.${stamp}${RESET}"
-    fi
-}
-
 # 判断主配置是否真的加载了 sshd_config.d（否则写进 .d 的文件完全不生效）
 sshd_includes_conf_dir() {
     [ -d "$SSHD_CONF_DIR" ] || return 1
@@ -285,17 +273,14 @@ set_sshd_config() {
     if [ "$use_conf_dir" -eq 1 ]; then
         # 0. 清理旧版遗留的 99-key.sh.conf（防重复）
         if [ -f "$SSHD_LEGACY" ]; then
-            backup_once "$SSHD_LEGACY"
             $SUDO rm -f "$SSHD_LEGACY"
         fi
         # 1. 注释主文件中的同参数项（防御 Include 在文件末尾的边界情况）
-        backup_once "$SSHD_MAIN"
         comment_param_in_file "$param" "$SSHD_MAIN"
         # 2. 注释其他 .conf 中的同参数项，避免 First Match Wins 冲突
         for conf in "${SSHD_CONF_DIR}"/*.conf; do
             [ -f "$conf" ] || continue
             [ "$conf" = "$SSHD_CUSTOM" ] && continue
-            backup_once "$conf"
             comment_param_in_file "$param" "$conf"
         done
         # 3. 确保自定义文件存在
@@ -305,7 +290,6 @@ set_sshd_config() {
         echo "${param} ${value}" | $SUDO tee -a "$SSHD_CUSTOM" > /dev/null
     else
         # 传统主文件模式（无 sshd_config.d 目录，或主配置未加载 .d 目录）
-        backup_once "$SSHD_MAIN"
         $SUDO sed -i -E "/^[[:space:]]*#?[[:space:]]*(${param})[[:space:]=]/d" "$SSHD_MAIN"
         if grep -q -iE "^[[:space:]]*Match[[:space:]]+" "$SSHD_MAIN"; then
             # 存在 Match 块，插入到第一个 Match 之前（大小写不敏感）
@@ -554,8 +538,6 @@ set_f2b_conf() {
             target_section="DEFAULT"
             ;;
     esac
-
-    backup_once "$JAIL_CONF"
 
     if [ ! -f "$JAIL_CONF" ]; then
         {
@@ -1663,7 +1645,7 @@ change_ssh_port() {
         if restart_sshd; then
             echo -e "${WARN} 已回滚到原端口 ${current_port}，当前连接安全。请检查新端口为何不可用。"
         else
-            echo -e "${ERROR} 回滚也失败了！请立即通过云控制台/VNC 进入，用备份文件恢复：${SSHD_MAIN}.key.sh.bak.*"
+            echo -e "${ERROR} 回滚也失败了！请立即通过云控制台/VNC 进入，把 ${SSHD_MAIN} 中的 Port 改回 ${current_port} 后重启 sshd。"
         fi
     fi
 
@@ -1845,10 +1827,10 @@ if [ -n "$CLI_GH_USER" ] || [ -n "$CLI_KEY_URL" ] || [ -n "$CLI_KEY_FILE" ] || \
                 if restart_sshd; then
                     echo -e "${WARN} 已回滚到原端口 ${CLI_OLD_PORT}，当前连接安全。"
                 else
-                    echo -e "${ERROR} 回滚也失败！请立即通过云控制台/VNC 进入，用备份文件恢复：${SSHD_MAIN}.key.sh.bak.*"
+                    echo -e "${ERROR} 回滚也失败！请立即通过云控制台/VNC 进入，把 ${SSHD_MAIN} 中的 Port 改回 ${CLI_OLD_PORT} 后重启 sshd。"
                 fi
             else
-                echo -e "${YELLOW}备份文件：${SSHD_MAIN}.key.sh.bak.*${RESET}"
+                echo -e "${WARN} 请执行 sshd -t 检查配置，或用 journalctl -u ssh / tail -n 50 /var/log/auth.log 查看失败原因。"
             fi
             exit 1
         fi
