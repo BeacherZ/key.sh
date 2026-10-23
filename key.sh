@@ -1596,9 +1596,9 @@ change_ssh_port() {
     if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
         echo -e "${YELLOW}${BOLD}[提示] 检测到您正在使用 SSH 远程会话，修改端口后请勿关闭当前窗口，请先新建终端验证！${RESET}"
     fi
-    read -rp "请输入新的 SSH 端口 (1024-65535): " new_port
+    read -rp "请输入新的 SSH 端口 (1-65535): " new_port
 
-    if [[ ! "$new_port" =~ ^[0-9]+$ ]] || [ "$new_port" -lt 1024 ] || [ "$new_port" -gt 65535 ]; then
+    if [[ ! "$new_port" =~ ^[0-9]+$ ]] || [ "$new_port" -lt 1 ] || [ "$new_port" -gt 65535 ]; then
         echo -e "${ERROR} 端口格式不正确！"
         read -rp "按回车键返回主菜单..."
         return
@@ -1771,7 +1771,7 @@ if [ -n "$CLI_GH_USER" ] || [ -n "$CLI_KEY_URL" ] || [ -n "$CLI_KEY_FILE" ] || \
 
     # 2. 修改端口
     if [ -n "$CLI_PORT" ]; then
-        if [[ ! "$CLI_PORT" =~ ^[0-9]+$ ]] || [ "$CLI_PORT" -lt 1024 ] || [ "$CLI_PORT" -gt 65535 ]; then
+        if [[ ! "$CLI_PORT" =~ ^[0-9]+$ ]] || [ "$CLI_PORT" -lt 1 ] || [ "$CLI_PORT" -gt 65535 ]; then
             echo -e "${ERROR} 端口格式不正确！" && exit 1
         fi
 
