@@ -47,7 +47,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/BeacherZ/key.sh/main/key.sh)
  系统架构 : Debian 12
  密钥登录 : 已启用 (1 把公钥)
  密码登录 : 已禁用 (PasswordAuthentication no)
- Fail2Ban : 防护中 (已封禁0 IP)
+ Fail2Ban : 防护中 (已封禁2 IP)
  SSH 端口 : 22
 ============================================================
  1. 密钥登录管理
@@ -56,6 +56,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/BeacherZ/key.sh/main/key.sh)
  4. SSH 端口修改
  0. 退出脚本
 ============================================================
+请输入选项 [0-4]:
 ```
 
 ---
